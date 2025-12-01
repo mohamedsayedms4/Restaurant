@@ -1,0 +1,59 @@
+package com.spring.boot.resturantbackend.models;
+
+import com.spring.boot.resturantbackend.models.security.Account;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+@Entity
+@Table(schema = "hr", name = "Order_Entity")
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(nullable = false)
+    private String code;
+    
+    @Column(nullable = false)
+    private double totalPrice;
+    
+    @Column(nullable = false)
+    private double totalNumber;
+    
+    @ManyToMany
+    @JoinTable(
+            schema = "hr",
+            joinColumns = @JoinColumn(name = "order_id"),
+    inverseJoinColumns = @JoinColumn(name = "product_id")
+            ,uniqueConstraints = @UniqueConstraint(columnNames = {"order_id", "product_id"})
+    )
+    private List<Product> products;
+    
+    
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Account account;
+    
+    
+    @PrePersist
+    public void prePersist() {
+        if (this.code == null) {
+        	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            this.code = LocalDateTime.now().format(formatter) ;
+//                        + "-" + System.currentTimeMillis(); // optional random for extra uniqueness
+
+        }
+    }
+}

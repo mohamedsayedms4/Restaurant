@@ -11,7 +11,16 @@ import {FooterComponent} from './componants/footer/footer.component';
 import { ChefsComponent } from './componants/chefs/chefs.component';
 import { ContactInfoComponent } from './componants/contact-info/contact-info.component';
 import {APP_BASE_HREF} from '@angular/common';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { LoginComponent } from './componants/login/login.component';
+import { SignupComponent } from './componants/signup/signup.component';
+import {AuthInterceptor} from '../service/inertceptor/auth.interceptor';
+import {AuthGuard} from '../service/guard/auth.guard';
+import {NoauthGuard} from '../service/guard/noauth.guard';
+import {NgbPaginationModule} from '@ng-bootstrap/ng-bootstrap';
+import { OrderCodeComponent } from './componants/order-code/order-code.component';
+import { AddNewProductComponent } from './componants/add-new-product/add-new-product.component';
+import {FormsModule} from '@angular/forms';
 
 // routes: Routes = [];
 
@@ -20,10 +29,25 @@ import {HttpClientModule} from "@angular/common/http";
 export const routes: Routes = [
 
   // http://localhost:4200/active
-  {path: 'products', component: ProductsComponent},
-  {path: 'cardDetails', component: CardDetailsComponent},
-  {path: 'contact-info', component: ContactInfoComponent},
-  {path: 'chefs', component: ChefsComponent},
+  {path: 'products', component: ProductsComponent , canActivate: [AuthGuard]},
+  {path: 'cardDetails', component: CardDetailsComponent , canActivate: [AuthGuard]},
+  {path: 'contact-info', component: ContactInfoComponent , canActivate: [AuthGuard]},
+  {path: 'chefs', component: ChefsComponent , canActivate: [AuthGuard]},
+  // list of products based on category
+  {path: 'category/:id', component: ProductsComponent , canActivate: [AuthGuard] },
+  {path: 'search/:key', component: ProductsComponent , canActivate: [AuthGuard]},
+
+  {path: 'login', component: LoginComponent , canActivate: [NoauthGuard]},
+  {path: 'signup', component: SignupComponent , canActivate: [NoauthGuard]},
+
+  {path: 'order-code/:code/totalNumber/:totalNumber/totalPrice/:totalPrice', component: OrderCodeComponent , canActivate: [AuthGuard]},
+
+  // add new product
+
+  {path: 'add-new-product', component: AddNewProductComponent , canActivate: [AuthGuard]},
+  {path: 'delete-product-id/:id', component: AddNewProductComponent , canActivate: [AuthGuard]},
+
+
   // http://localhost:4200/
   {path: '', redirectTo: '/products', pathMatch: 'full'},
 
@@ -46,14 +70,23 @@ export const routes: Routes = [
     CardComponent,
     FooterComponent,
     ChefsComponent,
-    ContactInfoComponent
+    ContactInfoComponent,
+    LoginComponent,
+    SignupComponent,
+    OrderCodeComponent,
+    AddNewProductComponent
   ],
   imports: [
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'}),
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbPaginationModule,
+    FormsModule
   ],
-  providers: [{ provide: APP_BASE_HREF, useValue: '/' }],
+  providers: [
+    { provide: APP_BASE_HREF, useValue: '/' }
+    ,{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [
     AppComponent
   ]

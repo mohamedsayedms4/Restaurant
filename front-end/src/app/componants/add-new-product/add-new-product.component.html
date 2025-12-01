@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light py-5">
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title mb-3">Add New Product</h4>
+
+          <form (ngSubmit)="SaveProduct()">
+
+            <!-- Product Name -->
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control" required [(ngModel)]="productName" name="productName">
+            </div>
+
+            <!-- Product Image -->
+            <div class="mb-3">
+              <label class="form-label">Image</label>
+              <input type="text" class="form-control" [(ngModel)]="productImage" name="productImage">
+            </div>
+
+            <!-- Product Description -->
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea rows="3" class="form-control" [(ngModel)]="productDescription" name="productDescription"></textarea>
+            </div>
+
+            <!-- Product Price -->
+            <div class="mb-3">
+              <label class="form-label">Price</label>
+              <input type="number" step="0.01" class="form-control" required [(ngModel)]="productPrice" name="productPrice">
+            </div>
+
+            <!-- Category Select -->
+            <div class="mb-3">
+              <label class="form-label">Category</label>
+              <select class="form-select" [(ngModel)]="selectedCategoryId" name="selectedCategoryId">
+                <option value="">-- Select Category --</option>
+                <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+              </select>
+            </div>
+
+            <!-- New Category Section -->
+            <div class="border p-3 mb-3">
+              <h6>Create New Category</h6>
+              <div class="mb-2">
+                <label class="form-label">Category Name</label>
+                <input type="text" class="form-control" [(ngModel)]="newCategoryName" name="newCategoryName">
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Category Logo</label>
+                <input type="text" class="form-control" [(ngModel)]="newCategoryLogo" name="newCategoryLogo">
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Category Flag</label>
+                <input list="flagsList" class="form-control" [(ngModel)]="newCategoryFlag" name="newCategoryFlag">
+                <datalist id="flagsList">
+                  <option *ngFor="let f of flags" [value]="f"></option>
+                </datalist>
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success">Save Product</button>
+            </div>
+          </form>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

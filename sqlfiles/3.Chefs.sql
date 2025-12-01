@@ -9,3 +9,11 @@ INSERT INTO chefs (LOGO_PATH, NAME, FACE_LINK, INSTA_LINK, TWE_LINK, SPECIALTY) 
 
 INSERT INTO chefs (LOGO_PATH, NAME, FACE_LINK, INSTA_LINK, TWE_LINK, SPECIALTY) VALUES
 ('team-4.jpg', 'Nasser Karim', 'https://facebook.com/chef4', 'https://instagram.com/chef4', 'https://twitter.com/chef4', 'Candies');
+
+
+SELECT constraint_name, column_name
+FROM user_cons_columns
+WHERE table_name = 'ORDER_ENTITY';
+
+ALTER TABLE hr.order_entity
+DROP CONSTRAINT UK6HCAGTQWU6NC5HYQOXSNGX7XT;

@@ -1,0 +1,32 @@
+package com.spring.boot.resturantbackend.controllers;
+
+import com.spring.boot.resturantbackend.dto.ChefDto;
+import com.spring.boot.resturantbackend.dto.ExceptionDto;
+import com.spring.boot.resturantbackend.services.ChefService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.SystemException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/chef")
+public class ChefController {
+    @Autowired
+    private ChefService chefService;
+    
+    @GetMapping("/getAll")
+    public ResponseEntity<List<ChefDto>> getAllChefs() throws SystemException {
+        return ResponseEntity.ok(chefService.getAllChefs());
+    }
+}
