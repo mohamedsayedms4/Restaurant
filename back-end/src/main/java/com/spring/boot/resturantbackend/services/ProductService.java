@@ -2,6 +2,8 @@ package com.spring.boot.resturantbackend.services;
 
 import com.spring.boot.resturantbackend.controllers.vm.ProductResponseVm;
 import com.spring.boot.resturantbackend.dto.ProductDto;
+import com.spring.boot.resturantbackend.dto.ProductPatchDto;
+import jakarta.transaction.SystemException;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ public interface ProductService {
 
     List<ProductDto> createListOfProduct(List<ProductDto> productDto);
 
-    ProductDto updateProduct(ProductDto productDto);
+    ProductDto updateProduct(ProductPatchDto productDto) throws SystemException;
 
     List<ProductDto> updateListOfProduct(List<ProductDto> productDto);
 
@@ -29,4 +31,6 @@ public interface ProductService {
     ProductResponseVm getAllProductsByKey(String key, int page, int size);
 
     ProductResponseVm getAllProductsByCategoryIdAndKey(Long categoryId, String key, int page, int size);
+
+//    ProductDto updateProduct(ProductDto dto);
 }

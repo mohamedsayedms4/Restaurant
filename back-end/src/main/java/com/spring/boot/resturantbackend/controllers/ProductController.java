@@ -3,6 +3,7 @@ package com.spring.boot.resturantbackend.controllers;
 import com.spring.boot.resturantbackend.controllers.vm.ProductResponseVm;
 import com.spring.boot.resturantbackend.dto.ExceptionDto;
 import com.spring.boot.resturantbackend.dto.ProductDto;
+import com.spring.boot.resturantbackend.dto.ProductPatchDto;
 import com.spring.boot.resturantbackend.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,14 +47,14 @@ public class ProductController {
     					)
     			)
     })
-    @GetMapping("/all-products")
+    @GetMapping("")
     public ResponseEntity<ProductResponseVm> getAllProducts(@RequestParam int page, @RequestParam int size)
             throws SystemException {
         return ResponseEntity.ok(productService.getAllProducts(page, size));
     }
 
 
-    @GetMapping("/all-ProductsByCategoryId/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ProductResponseVm> getAllProductsByCategoryId(@PathVariable Long id, @RequestParam int page, @RequestParam int size)
             throws SystemException {
         return ResponseEntity.ok(productService.getAllProductsByCategoryId(id, page, size));
@@ -80,7 +81,7 @@ public class ProductController {
     
     
     // add new product
-    @PostMapping("/add-new-produt")
+    @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")  
     public ResponseEntity<ProductDto> addproduct(@RequestBody @Valid ProductDto productDto)
     {
@@ -92,7 +93,7 @@ public class ProductController {
     }
     
     // Delete By id  
-    @DeleteMapping("/delete-product-id/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         try {
@@ -103,4 +104,16 @@ public class ProductController {
                                  .body("Error deleting product: " + e.getMessage());
         }
     }
+
+//    update producct
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProductDto> patchProduct(
+            @PathVariable Long id,
+            @RequestBody ProductPatchDto dto) throws SystemException {
+
+        dto.setId(id); // enforce path id
+        return ResponseEntity.ok(productService.updateProduct(dto));
+    }
+
+
 }

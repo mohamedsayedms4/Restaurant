@@ -2,6 +2,7 @@ package com.spring.boot.resturantbackend.services.impl;
 
 import com.spring.boot.resturantbackend.controllers.vm.ProductResponseVm;
 import com.spring.boot.resturantbackend.dto.ProductDto;
+import com.spring.boot.resturantbackend.dto.ProductPatchDto;
 import com.spring.boot.resturantbackend.mappers.ProductMapper;
 import com.spring.boot.resturantbackend.models.Category;
 import com.spring.boot.resturantbackend.models.Product;
@@ -144,17 +145,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProduct(ProductDto productDto) {
-        try {
-            if (Objects.isNull(productDto.getId())) {
-                throw new SystemException("id.must_be.not_null");
-            }
-            Product product = ProductMapper.PRODUCT_MAPPER.toProduct(productDto);
-            product = productRepo.save(product);
-            return ProductMapper.PRODUCT_MAPPER.toProductDto(product);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+    public ProductDto updateProduct(ProductPatchDto dto) throws SystemException {
+
+        if (dto.getId() == null) {
+            throw new SystemException("id.must_be.not_null");
         }
+
+        Product product = productRepo.findById(dto.getId())
+                .orElseThrow(() -> new SystemException("product.not.found"));
+
+        // update only provided fields
+        if (dto.getName() != null) product.setName(dto.getName());
+        if (dto.getImage() != null) product.setImage(dto.getImage());
+        if (dto.getDescription() != null) product.setDescription(dto.getDescription());
+        if (dto.getPrice() != null) product.setPrice(dto.getPrice());
+
+        if (dto.getCategoryId() != null) {
+            Category category = categoryRepo.findById(dto.getCategoryId())
+                    .orElseThrow(() -> new SystemException("category.not.found"));
+            product.setCategory(category);
+        }
+
+        Product saved = productRepo.save(product);
+        return ProductMapper.PRODUCT_MAPPER.toProductDto(saved);
     }
 
     @Override

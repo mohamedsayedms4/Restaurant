@@ -4,10 +4,11 @@ spring:
   application:
     name: backend
   datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@//localhost:1521/orclpdb
-    username: hr
-    password: hr
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: update
